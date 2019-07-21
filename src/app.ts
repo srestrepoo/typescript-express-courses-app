@@ -27,14 +27,17 @@ class App {
 
     private initializeMiddlewares() {
         this.app.use(bodyParser.json());
-        this.app.use(bodyParser.urlencoded({extended: false}));
+        this.app.use(bodyParser.urlencoded({ extended: false }));
     }
 
     private initializeDB() {
         const mongoDB = process.env.MONGODB_URI;
         mongoose.connect(mongoDB,
-            {useCreateIndex : true,
-             useNewUrlParser : true });
+            {
+                useCreateIndex: true,
+                useFindAndModify: false,
+                useNewUrlParser: true
+            });
         mongoose.Promise = global.Promise;
     }
 
