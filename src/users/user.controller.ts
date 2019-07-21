@@ -1,4 +1,5 @@
 import * as express from "express";
+import validateJWT from "../middleware/validateJWT.middleware";
 import User from "./user.interface";
 import userModel from "./user.model";
 
@@ -14,8 +15,8 @@ class UserController {
         this.router.get(this.path, this.getAllUsers);
         this.router.get(`${this.path}/:username`, this.getUser);
         this.router.post(this.path, this.createUser);
-        this.router.put(`${this.path}/:username`, this.updateUser);
-        this.router.delete(`${this.path}/:username`, this.deleteUser);
+        this.router.put(`${this.path}/:username`, validateJWT, this.updateUser);
+        this.router.delete(`${this.path}/:username`, validateJWT, this.deleteUser);
     }
 
     public getAllUsers = async (request: express.Request, response: express.Response) => {
@@ -28,7 +29,7 @@ class UserController {
             const user = await userModel.findOne({ username: request.params.username });
             response.send(user).status(200);
         } catch (error) {
-            response.status(500).send(error);
+            response.status(500).send(error.message);
         }
     }
 
@@ -40,26 +41,27 @@ class UserController {
             response.send(user).status(201);
         } catch (error) {
             // TODO: add other error codes
-            response.status(500).send(error);
+            response.status(500).send(error.message);
         }
     }
 
     public deleteUser = async (request: express.Request, response: express.Response) => {
         try {
-            await userModel.deleteOne({ username: request.params.username });
-            response.sendStatus(204);
+            const userDeleted = await userModel.deleteOne({ username: request.params.username });
+            // tslint:disable-next-line: no-console
+            (userDeleted.n) ? response.sendStatus(204) : response.sendStatus(404);
         } catch (error) {
-            response.status(500).send(error);
+            response.status(500).send(error.message);
         }
     }
 
     public updateUser = async (request: express.Request, response: express.Response) => {
         try {
             const userData: User = request.body;
-            await userModel.findOneAndUpdate({ username: request.params.username }, userData);
-            response.send(userData).status(201);
+            const updatedUser = await userModel.findOneAndUpdate({ username: request.params.username }, userData);
+            (updatedUser) ? response.send(userData).status(201) : response.sendStatus(404);
         } catch (error) {
-            response.status(500).send(error);
+            response.status(500).send(error.message);
         }
     }
 

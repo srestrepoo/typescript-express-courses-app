@@ -7,7 +7,12 @@ const userSchema = new mongoose.Schema({
     lastname: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, required: true },
+    role: {
+        type: String,
+        // tslint:disable-next-line: object-literal-sort-keys
+        enum: ["administrator", "professor", "student"],
+        required: true
+    },
 });
 
 const userModel = mongoose.model<User & mongoose.Document>("User", userSchema);

@@ -8,7 +8,7 @@ class App {
     public app: express.Application;
     public port: string;
 
-    constructor(controllers: [Controller]) {
+    constructor(controllers: Controller[]) {
         dotenv.config();
         this.app = express();
         this.port = process.env.SERVER_PORT;
@@ -41,7 +41,7 @@ class App {
         mongoose.Promise = global.Promise;
     }
 
-    private initializeControllers(controllers: [Controller]) {
+    private initializeControllers(controllers: Controller[]) {
         controllers.forEach((controller) => {
             this.app.use("/api", controller.router);
         });
