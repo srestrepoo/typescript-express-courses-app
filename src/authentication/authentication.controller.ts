@@ -1,7 +1,5 @@
 import dotenv from "dotenv";
 import * as express from "express";
-import jwt from "jsonwebtoken";
-import userModel from "../users/user.model";
 import AuthenticationService from "./authentication.service";
 
 class AuthenticationController {

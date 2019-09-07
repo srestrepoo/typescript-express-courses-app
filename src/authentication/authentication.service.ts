@@ -1,6 +1,4 @@
-import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import userModel from "../users/user.model";
 import UserService from "../users/user.service";
 import UserAuth from "./authentication.interface";
 

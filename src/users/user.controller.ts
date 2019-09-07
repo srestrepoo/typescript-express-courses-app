@@ -1,7 +1,6 @@
 import * as express from "express";
 import validateJWT from "../middleware/validateJWT.middleware";
 import User from "./user.interface";
-import userModel from "./user.model";
 import UserService from "./user.service";
 
 // tslint:disable-next-line: class-name
