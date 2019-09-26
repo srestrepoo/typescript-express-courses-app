@@ -1,12 +1,14 @@
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import express from "express";
+import { Server } from "http";
 import mongoose from "mongoose";
 import Controller from "./controller";
 
 class App {
     public app: express.Application;
     public port: string;
+    public server: Server;
 
     constructor(controllers: Controller[]) {
         dotenv.config();
@@ -19,10 +21,10 @@ class App {
     }
 
     public listen() {
-        this.app.listen(this.port, () => {
-            // tslint:disable-next-line: no-console
-            console.log(`App listening on the port ${this.port}`);
-        });
+            this.server = this.app.listen(this.port, () => {
+                // tslint:disable-next-line: no-console
+                console.log(`App listening on the port ${this.port}`);
+            });
     }
 
     private initializeMiddlewares() {
@@ -36,7 +38,12 @@ class App {
             {
                 useCreateIndex: true,
                 useFindAndModify: false,
-                useNewUrlParser: true
+                useNewUrlParser: true,
+                useUnifiedTopology: true
+            }, (error) => {
+                // tslint:disable-next-line: no-console
+                console.log("Data base connection error");
+                this.server.close();
             });
         mongoose.Promise = global.Promise;
     }

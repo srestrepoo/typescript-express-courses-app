@@ -12,7 +12,7 @@ class UserService {
         return userDeleted;
     }
     public getAllUsers = async () => {
-        const users = await userModel.find();
+        const users = await userModel.find().select("-password -_id");
         return users;
     }
     public getUser = async (userToFind: string) => {

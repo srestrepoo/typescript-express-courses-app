@@ -7,11 +7,10 @@ const validateJWT = async (request: express.Request, response: express.Response,
         dotenv.config();
         const authHeader = request.header("Authorization");
         const token = authHeader.split(" ")[1];
-        // decode token
         if (token) {
             jwt.verify(token, process.env.JWT_KEY, (error, decoded) => {
                 if (error) {
-                    return response.json({ success: false, message: "Failed to authenticate token." });
+                    return response.status(403).json({ success: false, message: "Failed to authenticate token." });
                 } else {
                     request.body.userData = decoded;
                     next();
